@@ -1,0 +1,20 @@
+{
+  "clients": [
+    {
+      "name": "Erick",
+      "company": "White Gap",
+      "email": "erickalan@gmail.com",
+      "phone": "5609090909",
+      "notes": "",
+      "id": 1
+    },
+    {
+      "name": "Ariel Axel",
+      "company": "White Gap",
+      "email": "axel@gmail.com",
+      "phone": "5500000000",
+      "notes": "",
+      "id": 2
+    }
+  ]
+}

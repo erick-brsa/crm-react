@@ -1,10 +1,8 @@
-import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
-import Formulario from "../components/Formulario"
+import { useParams } from "react-router-dom"
 import Spinner from "../components/Spinner"
 
-const EditClient = () => {
-
+const ShowClient = () => {
 	const [client, setClient] = useState({})
 	const [loading, setLoading] = useState(false)
 
@@ -19,11 +17,12 @@ const EditClient = () => {
 				const response = await fetch(url)
 				const result = await response.json()
 				setClient(result)
-				console.log(result)
 			} catch (error) {
 				console.log(error)
 			} finally {
-				setLoading(false)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 750)
 			}
 		}
 		getClient()
@@ -48,16 +47,39 @@ const EditClient = () => {
 	return (
 		<div className="w-full">
 			<h1 className="font-black text-4xl text-blue-600">
-				Editar Cliente
+				Cliente: {""}
+				<span className="text-gray-600">{client.name}</span>
 			</h1>
-			<p className="mt-2">
-				Utiliza este formulario para editar datos de un cliente.
+			<p className="text-2xl mt-4">
+				<span className="font-bold uppercase text-gray-600">
+					Email: {""}
+				</span>
+				{client.email}
 			</p>
-			<Formulario 
-				client={client}
-			/>
+			<p className="text-2xl">
+				<span className="font-bold uppercase text-gray-600">
+					Empresa: {""}
+				</span>
+				{client.company}
+			</p>
+			{client.phone && (
+				<p className="text-2xl">
+					<span className="font-bold uppercase text-gray-600">
+						Teléfono: {""}
+					</span>
+					{client.phone}
+				</p>
+			)}
+			{client.notes && (
+				<p className="text-2xl">
+					<span className="font-bold uppercase text-gray-600">
+						Notas: {""}
+					</span>
+					{client.notes}
+				</p>
+			)}
 		</div>
 	)
 }
 
-export default EditClient
+export default ShowClient

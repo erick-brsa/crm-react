@@ -1,7 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import { useNavigate } from "react-router-dom"
 import * as Yup from "yup"
 
-const Formulario = () => {
+const Formulario = ({ client }) => {
+	
+	const navigate = useNavigate()
 	
 	const schema = Yup.object().shape({
 		name: Yup.string()
@@ -18,25 +21,48 @@ const Formulario = () => {
 			.positive("El teléfono no es válido"),
 	})
 
-	const handleSubmit = (values) => {
-		console.log(values)
+	const handleSubmit = async (values) => {
+		try {
+			let response = ""
+			if (client.id) {
+				const url = `http://localhost:4000/clients/${client.id}`
+				response = await fetch(url, {
+					method: "PUT",
+					body: JSON.stringify(values),
+					headers: { "Content-Type": "application/json" }
+				})
+			} else {
+				const url = "http://localhost:4000/clients"
+				response = await fetch(url, {
+					method: "POST",
+					body: JSON.stringify(values),
+					headers: { "Content-Type": "application/json" }
+				})
+			}
+			await response.json()
+			navigate("/clients")
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return (
 		<div className="bg-white py-10 px-5 my-5 rounded-md shadow-lg border-2 md:w-4/5 mx-auto">
 			<h1 className="text-gray-600 font-bold text-2xl uppercase text-center">
-				Agregar Cliente
+				{client?.name ? 'Editar Cliente' : 'Agregar Cliente' }
 			</h1>
 			<Formik
 				initialValues={{
-					name: "",
-					company: "",
-					email: "",
-					phone: "",
-					notes: ""
+					name: client?.name ?? "" ,
+					company: client?.company ?? "",
+					email: client?.email ?? "",
+					phone: client?.phone ?? "",
+					notes: client?.notes ?? "",
 				}}
-				onSubmit={(values) => {
+				enableReinitialize={true}
+				onSubmit={async (values, { resetForm }) => {
 					handleSubmit(values)
+					resetForm()
 				}}
 				validationSchema={schema}
 			>
@@ -145,7 +171,7 @@ const Formulario = () => {
 						</div>
 						<input
 							type="submit"
-							value="Agregar Cliente"
+							value={client?.name ? 'Editar Cliente' : 'Agregar Cliente' }
 							className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						/>
 					</Form>
@@ -153,6 +179,10 @@ const Formulario = () => {
 			</Formik>
 		</div>
 	)
+}
+
+Formulario.defaultProps = {
+	client: {}
 }
 
 export default Formulario
