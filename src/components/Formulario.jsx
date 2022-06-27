@@ -1,11 +1,27 @@
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import * as Yup from "yup"
 
 const Formulario = () => {
 	
+	const schema = Yup.object().shape({
+		name: Yup.string()
+			.min(3, "El nombre es muy corto")
+			.max(20, "El nombre es muy largo")
+			.required("El nombre es obligatorio"),
+		company: Yup.string().required("La compañía es obligatoria"),
+		email: Yup.string()
+			.required("El email es obligatorio")
+			.email("El email no es válido"),
+		phone: Yup.number("El teléfono no es válido")
+			.integer("El teléfono no es válido")
+			.typeError("El teléfono no es válido")
+			.positive("El teléfono no es válido"),
+	})
+
 	const handleSubmit = (values) => {
 		console.log(values)
 	}
-			
+
 	return (
 		<div className="bg-white py-10 px-5 my-5 rounded-md shadow-lg border-2 md:w-4/5 mx-auto">
 			<h1 className="text-gray-600 font-bold text-2xl uppercase text-center">
@@ -17,13 +33,14 @@ const Formulario = () => {
 					company: "",
 					email: "",
 					phone: "",
-					notes: "",
+					notes: ""
 				}}
-				onSubmit={(values, { setSubmitting }) => {
+				onSubmit={(values) => {
 					handleSubmit(values)
 				}}
+				validationSchema={schema}
 			>
-				{() => (
+				{({ error }) => (
 					<Form className="mt-10">
 						<div className="mb-4">
 							<label
@@ -38,6 +55,11 @@ const Formulario = () => {
 								type="text"
 								className="shadow bg-gray-100 border-gray-300 border rounded w-full py-2 px-3 text-gray-700 focus:ring-blue-500 focus:outline-blue-500"
 								placeholder="Nombre del cliente"
+							/>
+							<ErrorMessage
+								component="p"
+								name="name"
+								className="text-md p-2 mt-4 bg-red-600 text-white text-center uppercase font-semibold rounded"
 							/>
 						</div>
 						<div className="mb-4">
@@ -54,6 +76,11 @@ const Formulario = () => {
 								className="shadow bg-gray-100 border-gray-300 border rounded w-full py-2 px-3 text-gray-700 focus:ring-blue-500 focus:outline-blue-500"
 								placeholder="Empresa del cliente"
 							/>
+							<ErrorMessage
+								component="p"
+								name="company"
+								className="text-md p-2 mt-4 bg-red-600 text-white text-center uppercase font-semibold rounded"
+							/>
 						</div>
 						<div className="mb-4">
 							<label
@@ -69,6 +96,11 @@ const Formulario = () => {
 								className="shadow bg-gray-100 border-gray-300 border rounded w-full py-2 px-3 text-gray-700 focus:ring-blue-500 focus:outline-blue-500"
 								placeholder="Correo del cliente"
 							/>
+							<ErrorMessage
+								component="p"
+								name="email"
+								className="text-md p-2 mt-4 bg-red-600 text-white text-center uppercase font-semibold rounded"
+							/>
 						</div>
 						<div className="mb-4">
 							<label
@@ -78,11 +110,16 @@ const Formulario = () => {
 								Teléfono: {""}
 							</label>
 							<Field
-								id="telefono"
+								id="phone"
 								name="phone"
 								type="tel"
 								className="shadow bg-gray-100 border-gray-300 border rounded w-full py-2 px-3 text-gray-700 focus:ring-blue-500 focus:outline-blue-500"
 								placeholder="Teléfono del cliente"
+							/>
+							<ErrorMessage
+								component="p"
+								name="phone"
+								className="text-md p-2 mt-4 bg-red-600 text-white text-center uppercase font-semibold rounded"
 							/>
 						</div>
 						<div className="mb-4">
@@ -99,6 +136,11 @@ const Formulario = () => {
 								type="text"
 								className="shadow bg-gray-100 border-gray-300 border rounded w-full py-2 px-3 h-40 text-gray-700 focus:ring-blue-500 focus:outline-blue-500"
 								placeholder="Notas del cliente"
+							/>
+							<ErrorMessage
+								component="p"
+								name="notes"
+								className="text-md p-2 mt-4 bg-red-600 text-white text-center uppercase font-semibold rounded"
 							/>
 						</div>
 						<input
