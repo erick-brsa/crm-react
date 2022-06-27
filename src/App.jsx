@@ -1,6 +1,20 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Layout from "./layouts/Layout"
+import Home from "./pages/Home"
+import NewClient from "./pages/NewClient"
+import EditClient from "./pages/EditClient"
+
 const App = () => {
 	return (
-		<h1 className="text-6xl font-extrabold">CRM REACT</h1>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/clients" element={ <Layout /> }>
+					<Route index element={ <Home /> } />
+					<Route path="new" element={ <NewClient /> } />
+					<Route path="edit/:id" element={ <EditClient /> } />
+				</Route>
+			</Routes>
+		</BrowserRouter>
 	)
 }
 
